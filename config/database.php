@@ -93,6 +93,17 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'url' => env('DB_URL'),
+            'database' => env('DB_DATABASE', 'backend_teste'),
+            'options' => [
+                'database' => env('DB_AUTH_DATABASE', 'admin'),
+                'authSource' => 'admin',
+                'tls' => false,
+            ],
+        ],
+
     ],
 
     /*
