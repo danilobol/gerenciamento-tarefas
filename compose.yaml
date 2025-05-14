@@ -44,7 +44,7 @@ services:
     image: rabbitmq:3-management
     ports:
       - '${RABBITMQ_ADMIN_PORT:-15672}:15672'
-      - '${RABBITMQ_QUEUE_PORT:-5672}:5672'
+      - '${RABBITMQ_QUEUE_PORT:-5674}:5672'
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
