@@ -1,0 +1,21 @@
+#!/bin/bash
+BASE_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )/..
+
+for folder in $(echo /var/www/.composer $BASE_PATH/{vendor,storage,bootstrap/cache,app,routes}); do
+    if [ ! -d "$folder" ]; then
+        mkdir -p "$folder"
+    fi
+
+    OWNER=$(stat -c "%u" "$folder")
+    if [[ $OWNER != 33 ]]; then
+        sudo chown -R 33:33 "$folder"
+    fi
+done
+
+chmod a+rw $BASE_PATH/{composer.json,composer.lock,.env}
+
+chmod -R a+rw $BASE_PATH/{storage,bootstrap/cache,app,routes}
+
+chmod -R a+x $BASE_PATH/artisan
+
+echo "Permissions adjusted successfully!"
