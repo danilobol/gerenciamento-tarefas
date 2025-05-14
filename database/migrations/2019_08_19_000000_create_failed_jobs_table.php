@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('uuid')->unique();
-            $table->text('connection');
-            $table->text('queue');
+        Schema::connection('mongodb')->create('failed_jobs', function (Blueprint $table) {
+            $table->string('uuid');
+            $table->unique('uuid');
+            $table->string('uuid');
+            $table->string('connection');
+            $table->string('queue');
             $table->longText('payload');
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('failed_jobs');
+        Schema::connection('mongodb')->dropIfExists('failed_jobs');
     }
 };

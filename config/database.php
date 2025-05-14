@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'mongodb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ return [
         'mongodb' => [
             'driver' => 'mongodb',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', 'backend_teste'),
+            'database' => env('DB_DATABASE', 'backend_gerenciamento'),
             'options' => [
                 'database' => env('DB_AUTH_DATABASE', 'admin'),
                 'authSource' => 'admin',
