@@ -1,0 +1,84 @@
+services:
+  server:
+    build: .
+    container_name: gerenciamento_app
+    restart: unless-stopped
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/public
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=db
+      - DB_PORT=27017
+      - DB_CONNECTION=mongodb
+      - DB_DATABASE=backend_gerenciamento
+      - DB_USERNAME=backend_gerenciamento
+      - DB_PASSWORD=backend_gerenciamento
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "1500:80"
+    networks:
+      - app_network
+    depends_on:
+      - rabbitmq
+      - db
+
+  db:
+    image: mongo:8.0
+    container_name: gerenciamento_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: backend_gerenciamento
+      MONGO_INITDB_ROOT_PASSWORD: backend_gerenciamento
+      MONGODB_DB: ${MONGODB_DB:-backend_gerenciamento}
+      MONGODB_URL: ${MONGODB_URL:-mongodb://backend_gerenciamento:backend_gerenciamento@db:27017}
+    volumes:
+      - db_data:/data/db
+    ports:
+      - '${MONGODB_DB_PORT:-27017}:27017'
+    networks:
+      - app_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '${RABBITMQ_ADMIN_PORT:-15672}:15672'
+      - '${RABBITMQ_QUEUE_PORT:-5672}:5672'
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: backend_gerenciamento
+      ME_CONFIG_MONGODB_ADMINPASSWORD: backend_gerenciamento
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+    driver: local
+  rabbitmq-data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
