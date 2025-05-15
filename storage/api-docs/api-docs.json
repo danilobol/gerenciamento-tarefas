@@ -1,0 +1,112 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Gerenciamento-Tarefas",
+        "contact": {
+            "name": "Danilo Brito",
+            "email": "danilo.britoxd@hotmail.com"
+        },
+        "license": {
+            "name": "GitHub Repository",
+            "url": "https://github.com/danilobol/gerenciamento-tarefas"
+        },
+        "version": "0.0.1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:1600"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registro de novos usuarios",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "danilo@gerenciamento.com"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Danilo"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login usuarios",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "danilo@gerenciamento.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ],
+    "externalDocs": {
+        "description": "Repositório no GitHub",
+        "url": "https://github.com/danilobol/gerenciamento-tarefas"
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
