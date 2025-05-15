@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\UserStatus;
+use App\Enums\UserType;
 use Illuminate\Support\Facades\Hash;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Override;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, \JsonSerializable
 {
     use Notifiable;
 
@@ -24,6 +26,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'type',
+        'status',
     ];
 
     /**
@@ -44,6 +48,13 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'type' => UserType::class,
+        'status' => UserStatus::class,
+    ];
+
+    protected $attributes = [
+        'type' => UserType::Common,
+        'status' => UserStatus::Active,
     ];
 
     /**
@@ -64,6 +75,8 @@ class User extends Authenticatable implements JWTSubject
                 'id'    => $this->getKey(),
                 'email' => $this->getAttribute('email'),
                 'name'  => $this->getAttribute('name'),
+                'type'  => $this->getTypeAttribute($this->getAttribute('type')),
+                'status'  => $this->isAtivo(),
             ],
         ];
     }
@@ -73,5 +86,28 @@ class User extends Authenticatable implements JWTSubject
         $this->password = Hash::make($password);
 
         return $this;
+    }
+
+    public function getTypeAttribute(?UserType $value): UserType
+    {
+        return $value ?? UserType::Common;
+    }
+
+    public function isAtivo(): bool
+    {
+        return $this->getAttribute('type') !== UserStatus::Blocked ||
+            $this->getAttribute('status') !== UserStatus::Inactive;
+    }
+
+    #[Override]
+    public function jsonSerialize(): array
+    {
+        return [
+            'id'    => $this->getKey(),
+            'email' => $this->getAttribute('email'),
+            'name'  => $this->getAttribute('name'),
+            'type'  => $this->getTypeAttribute($this->getAttribute('type')),
+            'status'  => $this->isAtivo(),
+        ];
     }
 }
