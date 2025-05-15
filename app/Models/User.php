@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Hash;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -65,5 +66,12 @@ class User extends Authenticatable implements JWTSubject
                 'name'  => $this->getAttribute('name'),
             ],
         ];
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = Hash::make($password);
+
+        return $this;
     }
 }
