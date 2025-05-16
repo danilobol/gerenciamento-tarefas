@@ -30,7 +30,7 @@ class UserRepository
         return $user;
     }
 
-    public function listPaginated(int $perPage = 15): LengthAwarePaginator
+    public function listPaginated(int $perPage = 5): LengthAwarePaginator
     {
         return User::select(['name', 'email', 'status'])
             ->paginate($perPage);

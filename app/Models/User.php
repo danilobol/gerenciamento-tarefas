@@ -75,7 +75,7 @@ class User extends Authenticatable implements JWTSubject, \JsonSerializable
                 'id'    => $this->getKey(),
                 'email' => $this->getAttribute('email'),
                 'name'  => $this->getAttribute('name'),
-                'type'  => $this->getTypeAttribute($this->getAttribute('type')),
+                'type'  => $this->getTypeAttribute($this->getAttribute('type'))->value,
                 'status'  => $this->isAtivo(),
             ],
         ];
@@ -88,9 +88,13 @@ class User extends Authenticatable implements JWTSubject, \JsonSerializable
         return $this;
     }
 
-    public function getTypeAttribute(?UserType $value): UserType
+    public function getTypeAttribute($value): UserType
     {
-        return $value ?? UserType::Admin;
+        if ($value instanceof UserType) {
+            return $value;
+        }
+
+        return $value ? UserType::from($value) : UserType::Common;
     }
 
     public function isAtivo(): bool
@@ -111,7 +115,7 @@ class User extends Authenticatable implements JWTSubject, \JsonSerializable
             'id'    => $this->getKey(),
             'email' => $this->getAttribute('email'),
             'name'  => $this->getAttribute('name'),
-            'type'  => $this->getTypeAttribute($this->getAttribute('type')),
+            'type'  => $this->getTypeAttribute($this->getAttribute('type'))->value,
             'status'  => $this->isAtivo(),
         ];
     }

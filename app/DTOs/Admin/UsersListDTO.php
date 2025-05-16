@@ -18,6 +18,7 @@ readonly class UsersListDTO implements \JsonSerializable
     {
         return new self(
             users: $paginator->getCollection()->map(fn($user) => [
+                'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'status' => $user->isAtivo(),

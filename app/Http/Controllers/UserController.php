@@ -89,9 +89,11 @@ class UserController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         try {
-            return response()->json(
-                $this->loginUserService->execute(LoginUserDTO::fromLoginRequest($request)),
-            );
+            $loginUser = $this->loginUserService->execute(LoginUserDTO::fromLoginRequest($request));
+
+            return response()->json([
+                'token' => $loginUser->token,
+            ])->cookie('jwt_token', $loginUser->token, $loginUser->expiresIn);
         } catch (\Throwable $exception) {
             return response()->json([
                 'error' => 'Não foi possível autenticar usuário.',
