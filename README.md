@@ -5,7 +5,9 @@
 #### Repository clone and configuration
     1 - git clone git@github.com:danilobol/gerenciamento-tarefas.git
     2 - cd/gerenciamento-tarefas
-    3 - make setup
+    3 - sudo apt update
+    4 - sudo apt install make
+    5 - make setup
 ```
 ---------------------------------------
         make help -> for help
