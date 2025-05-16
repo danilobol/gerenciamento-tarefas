@@ -90,13 +90,18 @@ class User extends Authenticatable implements JWTSubject, \JsonSerializable
 
     public function getTypeAttribute(?UserType $value): UserType
     {
-        return $value ?? UserType::Common;
+        return $value ?? UserType::Admin;
     }
 
     public function isAtivo(): bool
     {
-        return $this->getAttribute('type') !== UserStatus::Blocked ||
+        return $this->getAttribute('status') !== UserStatus::Blocked ||
             $this->getAttribute('status') !== UserStatus::Inactive;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->getAttribute('type') === UserType::Admin;
     }
 
     #[Override]

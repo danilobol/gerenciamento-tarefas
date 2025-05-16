@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\DTOs\User\CreateUserDTO;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository
@@ -27,5 +28,11 @@ class UserRepository
         $user->save();
 
         return $user;
+    }
+
+    public function listPaginated(int $perPage = 15): LengthAwarePaginator
+    {
+        return User::select(['name', 'email', 'status'])
+            ->paginate($perPage);
     }
 }

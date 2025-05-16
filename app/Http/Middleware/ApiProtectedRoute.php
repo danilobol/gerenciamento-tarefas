@@ -15,20 +15,20 @@ class ApiProtectedRoute
     public function handle(Request $request, Closure $next): JsonResponse
     {
         try {
-            $user = JWTAuth::parseToken()->checkOrFail();
-            $userInfo = $user->get('user');
-            $userData = (object)['userInfo' => $userInfo];
+            $user = JWTAuth::parseToken()->authenticate();
 
-            $request->merge(['userData' => $userData]);
+            if (! $user->isAtivo()) {
+                return response()->json(['status' => 'Usuário não está ativo no sitema.'], 401);
+            }
 
+            $request->merge(['userData' => $user]);
+            auth()->setUser($user);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return \response()->json(['status' => 'Token is Invalid'], 401);
+            return response()->json(['status' => 'Token is Invalid'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return \response()->json(['status' => 'Token is Expired'], 401);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return $next($request);
+            return response()->json(['status' => 'Token is Expired'], 401);
         } catch (\Exception $e) {
-            return \response()->json(['status' => 'Authorization Token not found'], 403);
+            return response()->json(['status' => 'Authorization Token not found'], 403);
         }
 
         return $next($request);

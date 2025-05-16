@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,10 +18,16 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
-
-], function ($router) {
+], function () {
     Route::post('/register', [UserController::class,'register']);
     Route::post('/login', [UserController::class, 'login']);
     Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
     Route::post('/reset-password', [UserController::class, 'resetPassword']);
+});
+
+Route::group([
+    'middleware' => ['api','api.jwt', 'admin.check'],
+    'prefix' => 'admin'
+], function () {
+    Route::get('/users', [AdminController::class, 'listUsers']);
 });
