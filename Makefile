@@ -28,3 +28,6 @@ swagger: ## Gerar a documentação swagger
 	docker compose exec server php artisan l5-swagger:generate
 
 setup: .env docker-build migrate admin-user swagger ## Executa a configuração completa do ambiente e so precisa executar uma vez
+
+tests: ## rodar os testes unitários
+	docker compose exec server php artisan test --testsuite=Unit
