@@ -1,7 +1,7 @@
 #!/bin/bash
 BASE_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )/..
 
-for folder in $(echo /var/www/.composer $BASE_PATH/{vendor,storage,bootstrap/cache,app,routes,config,database/seeders}); do
+for folder in $(echo /var/www/.composer $BASE_PATH/{vendor,storage,bootstrap/cache,app,routes,config,database/seeders,tests/Unit}); do
     if [ ! -d "$folder" ]; then
         mkdir -p "$folder"
     fi
@@ -14,7 +14,7 @@ done
 
 chmod a+rw $BASE_PATH/{composer.json,composer.lock,.env,database}
 
-chmod -R a+rw $BASE_PATH/{storage,bootstrap/cache,app,routes,config,database/seeders}
+chmod -R a+rw $BASE_PATH/{storage,bootstrap/cache,app,routes,config,database/seeders,tests/Unit}
 
 chmod -R a+x $BASE_PATH/artisan
 
